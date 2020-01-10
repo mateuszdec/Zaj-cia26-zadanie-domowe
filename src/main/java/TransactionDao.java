@@ -35,7 +35,7 @@ public class TransactionDao {
             preparedStatement.setLong(5, transaction.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Niepowodzenie podczas dodania do bazy: " + e.getMessage());
+            System.out.println("Niepowodzenie podczas modyfikacji danych: " + e.getMessage());
         }
         closeConnection(connection);
     }
@@ -50,19 +50,19 @@ public class TransactionDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Niepowodzenie podczas dodania do bazy: " + e.getMessage());
+            System.out.println("Niepowodzenie podczas usuwania danych " + e.getMessage());
         }
         closeConnection(connection);
     }
 
-    public Transaction showRevenue(String type) {
+
+    public Transaction showRevenue() {
         Connection connection = connect();
 
         PreparedStatement preparedStatement = null;
         try {
-            String sql = "SELECT * FROM transaction WHERE type = ?";
+            String sql = "SELECT * FROM transaction WHERE type = 'Wpłata'";
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, type);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 long id = resultSet.getLong("id");
@@ -75,11 +75,65 @@ public class TransactionDao {
                 return transaction;
             }
         } catch (SQLException e) {
-            System.out.println("Niepowodzenie podczas dodania do bazy: " + e.getMessage());
+            System.out.println("Niepowodzenie podczas wyświetlania przychodów " + e.getMessage());
         }
         closeConnection(connection);
         return null;
     }
+
+
+    public Transaction showExpenses() {
+        Connection connection = connect();
+
+        PreparedStatement preparedStatement = null;
+        try {
+            String sql = "SELECT * FROM transaction WHERE type = 'Wyplata'";
+            preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                long id = resultSet.getLong("id");
+                String typeFromDb = resultSet.getString("type");
+                String description = resultSet.getString("description");
+                Double amount = resultSet.getDouble("amount");
+                String date = resultSet.getString("date");
+
+                Transaction transaction = new Transaction(id, typeFromDb, description, amount, date);
+                return transaction;
+            }
+        } catch (SQLException e) {
+            System.out.println("Niepowodzenie podczas wyświetlania wydatków " + e.getMessage());
+        }
+        closeConnection(connection);
+        return null;
+    }
+
+
+
+//    public Transaction showRevenue(String type) {
+//        Connection connection = connect();
+//
+//        PreparedStatement preparedStatement = null;
+//        try {
+//            String sql = "SELECT * FROM transaction WHERE type = ?";
+//            preparedStatement = connection.prepareStatement(sql);
+//            preparedStatement.setString(1, type);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            if (resultSet.next()) {
+//                long id = resultSet.getLong("id");
+//                String typeFromDb = resultSet.getString("type");
+//                String description = resultSet.getString("description");
+//                Double amount = resultSet.getDouble("amount");
+//                String date = resultSet.getString("date");
+//
+//                Transaction transaction = new Transaction(id, typeFromDb, description, amount, date);
+//                return transaction;
+//            }
+//        } catch (SQLException e) {
+//            System.out.println("Niepowodzenie podczas dodania do bazy: " + e.getMessage());
+//        }
+//        closeConnection(connection);
+//        return null;
+//    }
 
 
 
@@ -106,5 +160,4 @@ public class TransactionDao {
         }
         return null;
     }
-
 }

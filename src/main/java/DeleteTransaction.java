@@ -12,6 +12,5 @@ public class DeleteTransaction {
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.deleteTransaction(id);
         System.out.println("Usunięto!");
-
     }
 }

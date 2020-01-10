@@ -21,6 +21,5 @@ public class AddTransaction {
         Transaction transaction = new Transaction(type, description, amount, date);
         TransactionDao transactionDao = new TransactionDao();
         transactionDao.add(transaction);
-
     }
 }
